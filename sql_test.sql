@@ -1,8 +1,10 @@
--- Volume and Denial Rate for Inpatient Admits by Acute vs Non-Acute
+-- Volume and Denial Rate for Inpatient Admits by Acute/Non-Acute and Line of Business
 -- Source: Knowledge Base metric formulas (num_pmes, overall_denial_rate)
 -- Required base filters applied: pending_auth_ind = 0, admission_type IN (elective, emergency/urgent)
+-- Filtered to year 2025
 
 SELECT
+    business_ln_cd,
     acuity,
     COUNT(DISTINCT pme_reference_no)                                    AS num_pmes,
     SUM(final_denied_ind)                                               AS denied_pmes,
@@ -12,5 +14,10 @@ FROM
 WHERE
     pending_auth_ind = 0
     AND LOWER(admission_type_desc) IN ('elective', 'emergency/urgent')
+    AND year = 2025
+GROUP BY
+    business_ln_cd,
+    acuity
 ORDER BY
+    business_ln_cd,
     acuity
